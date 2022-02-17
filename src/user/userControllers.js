@@ -41,7 +41,7 @@ exports.updateUser = async (req, res) => {
 			);
 			res.status(200).send({
 				amendUser,
-				updateUser: `User email updated to: ${req.body.newemail}`,
+				message: `User email updated to: ${req.body.newemail}`,
 			});
 		} else if (req.body.newusername) {
 			const amendUser = await User.updateOne(
@@ -50,11 +50,29 @@ exports.updateUser = async (req, res) => {
 			);
 			res.status(200).send({
 				amendUser,
-				updateUser: `User username updated to: ${req.body.newusername}`,
+				message: `User username updated to: ${req.body.newusername}`,
 			});
 		} else {
 			res.status(400).send({ message: "Invalid request" });
 		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ err: error.message });
+	}
+};
+
+// DELETE USER
+exports.deleteUser = async (req, res) => {
+	try {
+		const eraseUser = await User.deleteOne({
+			email: req.body.email,
+			username: req.body.username,
+			password: req.body.password,
+		});
+		res.status(200).send({
+			eraseUser,
+			message: `User successfully deleted`,
+		});
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ err: error.message });
