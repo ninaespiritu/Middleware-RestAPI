@@ -22,6 +22,9 @@ exports.findUser = async (req, res) => {
 		} else if (req.body.username) {
 			const getUser = await User.findOne({ username: req.body.username });
 			res.status(200).send({ user: getUser });
+		} else if (req.body) {
+			const getUser = await User.find({});
+			res.status(200).send({ user: getUser });
 		} else {
 			res.status(400).send({ message: "Invalid request" });
 		}
