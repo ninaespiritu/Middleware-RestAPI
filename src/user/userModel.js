@@ -1,4 +1,6 @@
+const req = require("express/lib/request");
 const mongoose = require("mongoose");
+const { isEmail } = require("validator");
 
 const userSchema = new mongoose.Schema({
 	username: {
@@ -10,6 +12,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		unique: true,
+		validate: [isEmail, "incorrect email format"]
 	},
 	password: {
 		type: String,
