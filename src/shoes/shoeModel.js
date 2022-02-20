@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// const User = require("../user/userModel");
 
 const shoeSchema = new mongoose.Schema({
 	name: {
@@ -21,6 +22,8 @@ const shoeSchema = new mongoose.Schema({
 	seller: {
 		type: String,
 		required: true,
+		// type: mongoose.Schema.Types.ObjectId,
+		// ref: `${User}`,
 	},
 });
 

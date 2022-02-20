@@ -1,11 +1,17 @@
 const bcrypt = require("bcryptjs/dist/bcrypt");
-const req = require("express/lib/request");
 const User = require("./userModel");
+const Shoe = require("../shoes/shoeModel");
 
 // ADD USER
 exports.addUser = async (req, res) => {
 	try {
-		const newUser = await User.create(req.body);
+		const newUser = await User.create({
+			email: req.body.email,
+			username: req.body.username,
+			password: req.body.password,
+			shoes: await Shoe.find({ seller: `${req.body.username}` }),
+		});
+
 		res.status(200).send({ user: newUser });
 	} catch (error) {
 		console.log(error);
@@ -18,15 +24,15 @@ exports.findUser = async (req, res) => {
 	try {
 		if (req.body.email) {
 			const getUser = await User.findOne({ email: req.body.email });
-			res.status(200).send({ user: getUser });
+			const getShoe = await Shoe.find({ seller: getUser.username });
+			res.status(200).send({ user: getUser, movies: getShoe });
 		} else if (req.body.username) {
 			const getUser = await User.findOne({ username: req.body.username });
-			res.status(200).send({ user: getUser });
-		} else if (req.body) {
+			const getShoe = await Shoe.find({ seller: getUser.username });
+			res.status(200).send({ user: getUser, movies: getShoe });
+		} else {
 			const getUser = await User.find({});
 			res.status(200).send({ user: getUser });
-		} else {
-			res.status(400).send({ message: "Invalid request" });
 		}
 	} catch (error) {
 		console.log(error);
