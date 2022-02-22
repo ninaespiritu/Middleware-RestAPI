@@ -1,11 +1,12 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 exports.hashPassword = async (req, res, next) => {
 	try {
 		// const tempPassword = req.body.password;
 		// const hashedPassword = await bcrypt.hash(tempPassword, 8);
 		// req.body.password = hashedPassword;
-		req.body.password = await bcrypt.hash(req.body.password, 8);
+		const salt = await bcrypt.genSalt(8);
+		req.body.password = await bcrypt.hash(req.body.password, salt);
 		next();
 	} catch (error) {
 		console.log(error);
