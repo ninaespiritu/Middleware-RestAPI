@@ -74,9 +74,9 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
 	try {
 		const eraseUser = await User.deleteOne({
-			email: req.body.email,
+			// email: req.body.email,
 			username: req.body.username,
-			password: req.body.password,
+			// password: req.body.password,
 		});
 		res.status(200).send({
 			eraseUser,
