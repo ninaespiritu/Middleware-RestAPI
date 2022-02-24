@@ -16,6 +16,22 @@ exports.hashPassword = async (req, res, next) => {
 	}
 };
 
+exports.decryptPassword = async (req, res, next) => {
+	try {
+		const infoUser = await User.findOne({ username: req.body.username });
+		if (await bcrypt.compare(req.body.password, infoUser.password)) {
+			req.user = infoUser;
+			next();
+		}
+		 else {
+			res.status(500).send({ message: "Your password does not match. Please try again." });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ err: error.message });
+	}
+};
+
 exports.tokenCheck = async (req, res, next) => {
 	try {
 		const token = req.header("Authorisation").replace("Bearer ", "");
@@ -28,19 +44,3 @@ exports.tokenCheck = async (req, res, next) => {
 		res.status(500).send({ err: error.message });
 	}
 };
-
-// exports.decryptPassword = async (req, res, next) => {
-// 	try {
-// 		const infoUser = await User.findOne({ email: req.body.email });
-// 		if (await bcrypt.compare(req.body.password, infoUser.password)) {
-// 			req.user = infoUser;
-// 			next();
-// 		}
-// 		 else {
-// 			res.status(500).send({ message: "Your password does not match. Please try again." });
-// 		}
-// 	} catch (error) {
-// 		console.log(error);
-// 		res.status(500).send({ err: error.message });
-// 	}
-// };

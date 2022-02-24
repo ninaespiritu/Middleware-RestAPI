@@ -94,26 +94,27 @@ exports.deleteUser = async (req, res) => {
 };
 
 // LOGGING IN
-exports.logIn = async (req, res) => {
+exports.login = async (req, res) => {
 	try {
-		const findUser = await User.findOne({ email: req.body.email });
-		if (findUser) {
-			const checkPassword = await bcrypt.compare(
-				req.body.password,
-				findUser.password
-			);
-			if (checkPassword) {
-				res.status(200).send({
-					message: "You have successfully logged in!",
-				});
-			} else {
-				res.status(400).send({
-					message: "Incorrect password. Please try again.",
-				});
-			}
-		} else {
-			res.status(400).send({ message: "User does not exist." });
-		}
+		res.status(200).send({ user: req.user });
+		// const findUser = await User.findOne({ email: req.body.email });
+		// if (findUser) {
+		// 	const checkPassword = await bcrypt.compare(
+		// 		req.body.password,
+		// 		findUser.password
+		// 	);
+		// 	if (checkPassword) {
+		// 		res.status(200).send({
+		// 			message: "You have successfully logged in!",
+		// 		});
+		// 	} else {
+		// 		res.status(400).send({
+		// 			message: "Incorrect password. Please try again.",
+		// 		});
+		// 	}
+		// } else {
+		// 	res.status(400).send({ message: "User does not exist." });
+		// }
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ err: error.message });
