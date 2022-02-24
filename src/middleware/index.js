@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../user/userModel");
 
 exports.hashPassword = async (req, res, next) => {
 	try {
@@ -14,16 +16,27 @@ exports.hashPassword = async (req, res, next) => {
 	}
 };
 
+exports.tokenCheck = async (req, res, next) => {
+	try {
+		const token = req.header("Authorisation").replace("Bearer ", "");
+		const decoded = await jwt.verify(token, process.env.SECRET);
+		const user = await User.findById(decoded._id);
+		req.user = user;
+		next();
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ err: error.message });
+	}
+};
+
 // exports.decryptPassword = async (req, res, next) => {
 // 	try {
 // 		const infoUser = await User.findOne({ email: req.body.email });
-// 		const comparePassword = await bcrypt.compare(req.body.password, infoUser.password);
-// 		if (comparePassword) {
-// 			res.status(200).send({ message: "You have successfully logged in"})
-// 			req.User = infoUser;
-// 			console.log("You have successfully logged in.")
+// 		if (await bcrypt.compare(req.body.password, infoUser.password)) {
+// 			req.user = infoUser;
 // 			next();
-// 		} else {
+// 		}
+// 		 else {
 // 			res.status(500).send({ message: "Your password does not match. Please try again." });
 // 		}
 // 	} catch (error) {

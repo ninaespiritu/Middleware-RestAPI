@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { hashPassword } = require("../middleware");
+const { hashPassword, tokenCheck } = require("../middleware");
 const {
 	addUser,
 	findUser,
@@ -17,5 +17,8 @@ userRouter.delete("/user", deleteUser);
 
 // Login route
 userRouter.post("/login", logIn);
+
+// Token route
+userRouter.get("/token", tokenCheck, )
 
 module.exports = userRouter;

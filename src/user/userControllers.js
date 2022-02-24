@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs/dist/bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("./userModel");
 const Shoe = require("../shoes/shoeModel");
 
@@ -11,8 +12,12 @@ exports.addUser = async (req, res) => {
 			password: req.body.password,
 			shoes: await Shoe.find({ seller: `${req.body.username}` }),
 		});
-
-		res.status(200).send({ user: newUser });
+		const token = await jwt.sign({ _id: newUser._id }, process.env.SECRET);
+		res.status(200).send({
+			message: "Successfully created user",
+			user: newUser,
+			token,
+		});
 	} catch (error) {
 		console.log(error);
 		res.status(500).send({ err: error.message });
