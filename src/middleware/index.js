@@ -22,9 +22,10 @@ exports.decryptPassword = async (req, res, next) => {
 		if (await bcrypt.compare(req.body.password, infoUser.password)) {
 			req.user = infoUser;
 			next();
-		}
-		 else {
-			res.status(500).send({ message: "Your password does not match. Please try again." });
+		} else {
+			res.status(500).send({
+				message: "Your password does not match. Please try again.",
+			});
 		}
 	} catch (error) {
 		console.log(error);
@@ -34,7 +35,7 @@ exports.decryptPassword = async (req, res, next) => {
 
 exports.tokenCheck = async (req, res, next) => {
 	try {
-		const token = req.header("Authorisation").replace("Bearer ", "");
+		const token = req.header("Authorization").replace("Bearer ", "");
 		const decoded = await jwt.verify(token, process.env.SECRET);
 		const user = await User.findById(decoded._id);
 		req.user = user;
